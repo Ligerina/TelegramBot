@@ -3,7 +3,8 @@ name: Build and Test
 on:
   push:
     branches:
-      - * # запускается при push в любой бранч
+      - master
+      - develop*
 
 jobs:
   build:
