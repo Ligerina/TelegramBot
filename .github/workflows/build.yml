@@ -27,11 +27,16 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build
 
-      - name: Store build artifacts
+      - name: Test with Gradle
+        run: ./gradlew test
+
+      - name: Store build artifacts         # в описании Actions будет ссылка на сбилденный релиз
         uses: actions/upload-artifact@v4
         with:
           name: build-artifacts
           path: build/libs/*.jar
 
-      - name: Test with Gradle
-        run: ./gradlew test
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: build/libs/*.jar
