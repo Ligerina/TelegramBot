@@ -1,0 +1,36 @@
+name: Build and Test
+
+on:
+  push:
+    branches:
+      - * # запускается при push в любой бранч
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew build
+
+      - name: Store build artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: build-artifacts
+          path: build/libs/*.jar
+
+      - name: Test with Gradle
+        run: ./gradlew test
