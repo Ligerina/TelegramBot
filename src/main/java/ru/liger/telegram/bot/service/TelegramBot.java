@@ -1,6 +1,7 @@
 package ru.liger.telegram.bot.service;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -8,6 +9,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.liger.telegram.bot.config.BotConfig;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class TelegramBot extends TelegramLongPollingBot {
@@ -27,9 +29,10 @@ public class TelegramBot extends TelegramLongPollingBot {
         switch (userText) {
             case "/start":
                 startCommandReceived(userName, chatId);
+                log.info("User {} received start message", userName);
                 break;
             default:
-                //logs
+                log.warn("User {} send unrecognised command: {}", userName, userText);
                 sendMessage(chatId, "The command was not recognised");
         }
 
@@ -60,7 +63,6 @@ public class TelegramBot extends TelegramLongPollingBot {
         try {
             execute(message);
         } catch (TelegramApiException e) {
-            // add logs
             throw new RuntimeException(e);
         }
 
