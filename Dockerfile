@@ -9,8 +9,8 @@ ENV TELEGRAM_BOT_TOKEN=$TELEGRAM_BOT_TOKEN
 
 #COPY build/libs/telegram.bot-0.0.1.jar /telegram-bot.jar
 
-FROM openjdk:21
+FROM first
 # copy the repository form the previous image
-COPY --from=first build/libs/telegram.bot-0.0.1.jar /telegram-bot.jar
+COPY build/libs/telegram.bot-0.0.1.jar /telegram-bot.jar
 
 CMD ["java", "-jar", "/telegram-bot.jar"]
