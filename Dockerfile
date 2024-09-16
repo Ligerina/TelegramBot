@@ -9,7 +9,7 @@ ARG TELEGRAM_BOT_TOKEN
 ENV TELEGRAM_BOT_NAME=$TELEGRAM_BOT_NAME
 ENV TELEGRAM_BOT_TOKEN=$TELEGRAM_BOT_TOKEN
 
-# Компиляция и сборка проекта
+# Копируем билд в image
 COPY build/libs/telegram.bot-0.0.1.jar /app/telegram-bot.jar
 
 # Stage 2: Создаем stage для финального образа
