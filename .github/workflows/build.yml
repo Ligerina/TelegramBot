@@ -50,8 +50,6 @@ jobs:
       - name: Build Docker image
         run: |
           docker build \
-          --build-arg TELEGRAM_BOT_TOKEN=${{ secrets.TELEGRAM_BOT_TOKEN_TEST }} \
-          --build-arg TELEGRAM_BOT_NAME=${{ secrets.TELEGRAM_BOT_NAME_TEST }} \
           -t ${{ secrets.DOCKER_HUB_USERNAME }}/tg-bot:latest .
 
       # Шаг 9: Push Docker image в Docker Hub
