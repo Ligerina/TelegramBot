@@ -51,7 +51,7 @@ jobs:
       # Шаг 8: Построение Docker image
       - name: Build Docker image
         run: |
-          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/tg-bot:latest .
+          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/tg-bot:test .
 
       # Шаг 9: Push Docker image в Docker Hub
       - name: Push Docker image
