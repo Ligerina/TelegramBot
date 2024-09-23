@@ -71,4 +71,4 @@ jobs:
             docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/tg-bot:latest
             docker stop tg-bot-container || true
             docker rm tg-bot-container || true
-            docker run -d --name tg-bot-container ${{ secrets.DOCKER_HUB_USERNAME }}/tg-bot:latest
+            docker run -d --name tg-bot-container --env-file ~/prod.env ${{ secrets.DOCKER_HUB_USERNAME }}/tg-bot:latest
