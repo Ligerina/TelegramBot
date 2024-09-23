@@ -7,12 +7,15 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.liger.telegram.bot.config.BotConfig;
+import ru.liger.telegram.bot.entity.TelegramUser;
 
 @Service
 @AllArgsConstructor
 public class TelegramBot extends TelegramLongPollingBot {
 
     private final BotConfig botConfig;
+
+    private final TelegramUserService telegramUserService;
 
     @Override
     public void onUpdateReceived(Update update) {
@@ -22,11 +25,12 @@ public class TelegramBot extends TelegramLongPollingBot {
 
         var chatId = update.getMessage().getChatId();
         var userText = update.getMessage().getText();
-        var userName = update.getMessage().getChat().getUserName();
+        var username = update.getMessage().getChat().getUserName();
 
         switch (userText) {
             case "/start":
-                startCommandReceived(userName, chatId);
+                telegramUserService.addNewUser(new TelegramUser(chatId, username));
+                startCommandReceived(username, chatId);
                 break;
             default:
                 //logs
@@ -47,7 +51,7 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     private void startCommandReceived(String userName, Long chatId) {
         var responseToUser = "Привет, " + userName + "! \n"+
-                "Я бот Антона. На данном этапе развития я не умнее людей, " +
+                "Я бот Антона (и не только). На данном этапе развития я не умнее людей, " +
                 "которые пьют кофе в серфе, но, надеюсь, я стану умнее!";
         sendMessage(chatId, responseToUser);
     }
