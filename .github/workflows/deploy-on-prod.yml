@@ -77,7 +77,7 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           port: ${{ secrets.SERVER_SSH_PORT }}
           source: ".env"
-          target: "~/.env"
+          target: "~"
 
       # Шаг 12: Копирование compose-файла на сервер
       - name: Copy compose file to server
@@ -88,7 +88,7 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           port: ${{ secrets.SERVER_SSH_PORT }}
           source: "docker-compose.yaml"
-          target: "~/docker-compose.yaml"
+          target: "~"
 
       # Шаг 13: Подключение по SSH и обновление контейнера на сервере
       - name: SSH and update container on server
