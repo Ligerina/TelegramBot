@@ -1,6 +1,7 @@
 package ru.liger.telegram.bot.service;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -11,6 +12,7 @@ import ru.liger.telegram.bot.entity.TelegramUser;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class TelegramBot extends TelegramLongPollingBot {
 
     private final BotConfig botConfig;
@@ -19,6 +21,8 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
+        log.info("uodate recieved");
+
         if (!update.hasMessage() || !update.getMessage().hasText()) {
             return;
         }
@@ -26,6 +30,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         var chatId = update.getMessage().getChatId();
         var userText = update.getMessage().getText();
         var username = update.getMessage().getChat().getUserName();
+        log.info("info: chatod: {}\\n msgtext: {}\n username {}\n", chatId, userText, username);
 
         switch (userText) {
             case "/start":
