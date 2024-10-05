@@ -6,8 +6,12 @@ import jakarta.persistence.Table;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Column;
 import jakarta.persistence.GenerationType;
-import lombok.Data;
+import lombok.Setter;
+import lombok.Getter;
+import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
@@ -15,13 +19,16 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "telegram_users")
-@Data
+@Setter
+@Builder
+@Getter
+@AllArgsConstructor
 @NoArgsConstructor
 public class TelegramUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    UUID id;
+    private UUID id;
 
     @Column(name = "chat_id", nullable = false, updatable = false)
     Long chatId;
@@ -32,9 +39,4 @@ public class TelegramUser {
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     LocalDateTime createdAt;
-
-    public TelegramUser(Long chatId, String username){
-        this.chatId = chatId;
-        this.username = username;
-    }
 }

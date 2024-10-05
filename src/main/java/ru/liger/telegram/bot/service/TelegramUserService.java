@@ -2,6 +2,7 @@ package ru.liger.telegram.bot.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.liger.telegram.bot.entity.TelegramUser;
 import ru.liger.telegram.bot.repository.TelegramUserRepository;
 
@@ -11,6 +12,7 @@ public class TelegramUserService {
 
     private final TelegramUserRepository telegramUserRepository;
 
+    @Transactional
     public void addNewUser(TelegramUser newUser){
         if (isNewUser(newUser)) {
             telegramUserRepository.save(newUser);

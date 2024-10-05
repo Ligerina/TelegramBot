@@ -29,7 +29,10 @@ public class TelegramBot extends TelegramLongPollingBot {
 
         switch (userText) {
             case "/start":
-                telegramUserService.addNewUser(new TelegramUser(chatId, username));
+                telegramUserService.addNewUser(TelegramUser.builder()
+                        .chatId(chatId)
+                        .username(username)
+                        .build());
                 startCommandReceived(username, chatId);
                 break;
             default:
