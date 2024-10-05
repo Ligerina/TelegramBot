@@ -64,7 +64,7 @@ jobs:
         run: |
           echo "TELEGRAM_BOT_TOKEN=${{ secrets.TELEGRAM_BOT_TOKEN_PROD }}" > .env
           echo "TELEGRAM_BOT_NAME=${{ secrets.TELEGRAM_BOT_NAME_PROD }}" >> .env
-          echo "DOCKER_HUB_USERNAME=${{ DOCKER_HUB_USERNAME }}" >> .env
+          echo "DOCKER_HUB_USERNAME=${{ secrets.DOCKER_HUB_USERNAME }}" >> .env
           echo "DATABASE_PASSWORD=data" >> .env
           echo "DATABASE_USERNAME=data" >> .env
 
