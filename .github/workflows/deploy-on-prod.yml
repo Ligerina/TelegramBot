@@ -100,5 +100,4 @@ jobs:
           port: ${{ secrets.SERVER_SSH_PORT }}
           script: |
             cd ~
-            docker compose pull tg-bot
-            docker compose up -d tg-bot
+            docker compose up
