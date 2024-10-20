@@ -19,7 +19,6 @@ public class TelegramBotFacade extends TelegramLongPollingBot {
 
     private final ChatService chatService;
 
-
     @Override
     public void onUpdateReceived(Update update) {
         log.info("update received - {}", update);

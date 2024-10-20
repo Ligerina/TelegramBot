@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRemove;
 import ru.liger.telegram.bot.entity.TelegramUser;
 import ru.liger.telegram.bot.utils.ChatStates;
 import ru.liger.telegram.bot.utils.Commands;
@@ -20,7 +21,7 @@ public class ChatService {
 
     private final KeyBoardService keyBoardService;
     private final TelegramUserService telegramUserService;
-    private final Map<Long, String> userState = new HashMap<>();
+    private final Map<Long, String> chatState = new HashMap<>();
 
     public SendMessage handleUserRequest(Update update) {
 
@@ -53,7 +54,7 @@ public class ChatService {
             }
             default -> {
                 log.warn("Unknown command message {}. User = {}, chatId = {}", userText, username, chatId);
-                return createMessage(chatId, "The command was not recognised");
+                return createMessage(chatId, "The command was not recognised", null);
             }
         }
     }
@@ -67,38 +68,38 @@ public class ChatService {
 
     private SendMessage createNewDialogWithUser(Long chatId) {
         SendMessage message = createMessage(chatId, "Введи свой вопрос");
-        userState.put(chatId, ChatStates.WAITING_USER_QUESTION);
+        chatState.put(chatId, ChatStates.WAITING_USER_QUESTION);
         return message;
     }
 
     private SendMessage startCommandReceived(String userName, Long chatId) {
         var responseToUser = getStartResponseForUser(userName);
-        userState.put(chatId, ChatStates.WAITING_USER_QUESTION);
-        return createMessage(chatId, responseToUser);
+        chatState.put(chatId, ChatStates.WAITING_USER_QUESTION);
+        return createMessage(chatId, responseToUser, null);
     }
 
 
     private SendMessage handleUserResponseAfterBotResponse(Long chatId, String userText) {
         if (Commands.ALLOWED_COMMAND_AFTER_MODEL_RESPONSE.contains(userText)) {
-            userState.put(chatId, ChatStates.WAITING_USER_QUESTION);
             return saveUserOpinion(chatId, userText);
         }
         return createMessage(chatId, "Пожалуйста, используй одну из преложенных команд ниже");
     }
 
     private SendMessage saveUserOpinion(Long chatId, String userText) {
-        //ACTUALLY SAVE HIS OPINION
-        return createMessage(chatId, "Cохранил твое мнение или продолжили диалог"); // todo если мнение один текст, если новый диалог то другой
+        //TODO ACTUALLY SAVE HIS OPINION
+        chatState.put(chatId, ChatStates.WAITING_USER_QUESTION);
+        return createMessage(chatId, "Cохранил твое мнение и/или продолжили диалог", null); // todo если мнение один текст, если новый диалог то другой
     }
 
     private SendMessage handleUserQuestion(Long chatId, String userText) {
-        // send question to bot and receive answer
-        var answer = "Response from bot"; // use userText to ask model
+        // TODO send question to bot and receive an answer
+        var answer = "Response from bot"; // TODO use userText to ask model
         var keyboardMarkup = keyBoardService.getDefaultUserKeyboard();
 
         var message = createMessage (chatId, answer, keyboardMarkup);
 
-        userState.put(chatId, ChatStates.RECEIVED_BOT_RESPONSE);
+        chatState.put(chatId, ChatStates.RECEIVED_BOT_RESPONSE);
 
         return message;
     }
@@ -114,17 +115,22 @@ public class ChatService {
         var message = new SendMessage();
         message.setChatId(String.valueOf(chatId));
         message.setText(answer);
-        message.setReplyMarkup(keyboardMarkup);
+        if (keyboardMarkup == null) {
+            ReplyKeyboardRemove keyboardRemove = new ReplyKeyboardRemove();
+            keyboardRemove.setRemoveKeyboard(true);
+            message.setReplyMarkup(keyboardRemove);
+        } else  {
+            message.setReplyMarkup(keyboardMarkup);
+        }
         return message;
     }
 
     private boolean isUserResponseAfterBotResponse(Long chatId) {
-        return userState.containsKey(chatId) && userState.get(chatId).equals(ChatStates.RECEIVED_BOT_RESPONSE);
+        return chatState.containsKey(chatId) && chatState.get(chatId).equals(ChatStates.RECEIVED_BOT_RESPONSE);
     }
 
     private boolean isUserQuestion(Long chatId) {
-        return userState.containsKey(chatId) && userState.get(chatId).equals(ChatStates.WAITING_USER_QUESTION);
+        return chatState.containsKey(chatId) && chatState.get(chatId).equals(ChatStates.WAITING_USER_QUESTION);
     }
-
 
 }
