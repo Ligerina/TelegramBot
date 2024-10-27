@@ -100,4 +100,4 @@ jobs:
           port: ${{ secrets.SERVER_SSH_PORT }}
           script: |
             cd ~
-            docker compose up
+            docker compose up -d
