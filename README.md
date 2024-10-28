@@ -1,5 +1,44 @@
 # Telegram bot
 
+# Table of contents
+
+- [Telegram bot](#telegram-bot)
+  - [Hosting](#hosting)
+    - [Настройка сервера](#-)
+  - [Pipeline](#pipeline)
+    - [Разработка](#)
+    - [Тестирование](#)
+    - [Промышленная эксплуатация](#-)
+  - [Секреты репозитория](#-)
+
+## Hosting
+### Настройка сервера
+
+1. Арендовать VDS (параметры VDS поддаются обсуждению) на CentOS, главное, чтобы был 1 публичный IP-адрес, по которому можно подключаться к серверу через SSH + у сервера был доступ в интернет.
+2. Сгенерировать пару SSH ключей себе на рабочей машинке через `ssh-keygen -t ed25519 -C "your_email@example.com"`
+3. Ключ с расширением `.pub` - публичный, его надо добавить на сервер. Либо какой-то утилитой "Добавить SSH-ключ", если хостинг продвинутый, либо вручную:
+Добавить ключ в конец файла `~/.ssh/authorized_keys`
+4. Ключ без расширения - приватный, его добавить надо в github secrets.
+4.1.* Если хочется серьезной безопасности, то необходимо отключить подключение по паролю через ssh:
+В файле `/etc/ssh/sshd_config` изменить `PasswordAuthentication` на `PasswordAuthentication no`.
+5. Установить docker с docker compose (ref -[официальная инструкция](https://docs.docker.com/engine/install/centos/) :
+```bash
+sudo yum remove docker \
+                  docker-client \
+                  docker-client-latest \
+                  docker-common \
+                  docker-latest \
+                  docker-latest-logrotate \
+                  docker-logrotate \
+                  docker-engine
+sudo yum install -y yum-utils
+sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+sudo yum install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+sudo systemctl start docker
+```
+Можно проверить успех мероприятия командой `sudo docker run hello-world`
+6. Готово! можно запускать action [Build on PROD](https://github.com/Ligerina/TelegramBot/actions/workflows/deploy-on-prod.yml)
+
 ## Pipeline
 ### Разработка
 Для разработки необходимо использовать ветки, названные в формате `dev/add-something`.
