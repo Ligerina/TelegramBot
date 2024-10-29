@@ -100,5 +100,5 @@ jobs:
           port: ${{ secrets.SERVER_SSH_PORT }}
           script: |
             cd ~
-            docker compose pull ${{ secrets.DOCKER_HUB_USERNAME }}/tg-bot:latest
+            docker compose pull java-app
             docker compose up -d
