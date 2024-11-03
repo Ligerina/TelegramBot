@@ -59,15 +59,8 @@ public class ChatService {
         }
     }
 
-    public String getStartResponseForUser(String userName) {
-        return "Привет, " + userName + "! \n"+
-                "Я бот Антона (и не только). На данном этапе развития я не умнее людей, " +
-                "которые пьют кофе в серфе, но, надеюсь, я стану умнее!" +
-                "Попробуй ввести свой вопрос - пока у нас нет модели, но я сэмулирую поведение";
-    }
-
     private SendMessage createNewDialogWithUser(Long chatId) {
-        SendMessage message = createMessage(chatId, "Введи свой вопрос");
+        var message = createMessage(chatId, "Введи свой вопрос");
         chatState.put(chatId, ChatStates.WAITING_USER_QUESTION);
         return message;
     }
@@ -78,12 +71,19 @@ public class ChatService {
         return createMessage(chatId, responseToUser, null);
     }
 
+    public String getStartResponseForUser(String userName) {
+        return "Привет, " + userName + "! \n"+
+                "Я бот Антона (и не только). На данном этапе развития я не умнее людей, " +
+                "которые пьют кофе в серфе, но, надеюсь, я стану умнее!" +
+                "Попробуй ввести свой вопрос - пока у нас нет модели, но я сэмулирую поведение";
+    }
+
 
     private SendMessage handleUserResponseAfterBotResponse(Long chatId, String userText) {
-        if (Commands.ALLOWED_COMMAND_AFTER_MODEL_RESPONSE.contains(userText)) {
+        if (Commands.isAllowedCommandAfterModelResponse(userText)) {
             return saveUserOpinion(chatId, userText);
         }
-        return createMessage(chatId, "Пожалуйста, используй одну из преложенных команд ниже");
+        return createMessage(chatId, "Пожалуйста, используй одну из предложенных команд ниже");
     }
 
     private SendMessage saveUserOpinion(Long chatId, String userText) {
@@ -112,9 +112,7 @@ public class ChatService {
     }
 
     private SendMessage createMessage(Long chatId, String answer, ReplyKeyboardMarkup keyboardMarkup) {
-        var message = new SendMessage();
-        message.setChatId(String.valueOf(chatId));
-        message.setText(answer);
+        var message =  createMessage(chatId, answer);
         if (keyboardMarkup == null) {
             ReplyKeyboardRemove keyboardRemove = new ReplyKeyboardRemove();
             keyboardRemove.setRemoveKeyboard(true);

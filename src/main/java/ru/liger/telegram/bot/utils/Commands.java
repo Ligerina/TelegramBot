@@ -14,6 +14,10 @@ public class Commands {
             RESPONSE_LIKED_COMMAND,
             RESPONSE_DISLIKED_COMMAND);
 
+    public static boolean isAllowedCommandAfterModelResponse(String userText) {
+        return ALLOWED_COMMAND_AFTER_MODEL_RESPONSE.contains(userText);
+    }
+
 
 
 }
