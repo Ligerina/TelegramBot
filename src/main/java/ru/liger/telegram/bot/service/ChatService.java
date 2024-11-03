@@ -21,7 +21,7 @@ public class ChatService {
 
     private final KeyBoardService keyBoardService;
     private final TelegramUserService telegramUserService;
-    private final Map<Long, String> chatState = new HashMap<>();
+    private final Map<Long, String> chatStates = new HashMap<>();
 
     public SendMessage handleUserRequest(Update update) {
 
@@ -61,13 +61,13 @@ public class ChatService {
 
     private SendMessage createNewDialogWithUser(Long chatId) {
         var message = createMessage(chatId, "Введи свой вопрос");
-        chatState.put(chatId, ChatStates.WAITING_USER_QUESTION);
+        chatStates.put(chatId, ChatStates.WAITING_USER_QUESTION);
         return message;
     }
 
     private SendMessage startCommandReceived(String userName, Long chatId) {
         var responseToUser = getStartResponseForUser(userName);
-        chatState.put(chatId, ChatStates.WAITING_USER_QUESTION);
+        chatStates.put(chatId, ChatStates.WAITING_USER_QUESTION);
         return createMessage(chatId, responseToUser, null);
     }
 
@@ -88,7 +88,7 @@ public class ChatService {
 
     private SendMessage saveUserOpinion(Long chatId, String userText) {
         //TODO ACTUALLY SAVE HIS OPINION
-        chatState.put(chatId, ChatStates.WAITING_USER_QUESTION);
+        chatStates.put(chatId, ChatStates.WAITING_USER_QUESTION);
         return createMessage(chatId, "Cохранил твое мнение и/или продолжили диалог", null); // todo если мнение один текст, если новый диалог то другой
     }
 
@@ -99,7 +99,7 @@ public class ChatService {
 
         var message = createMessage (chatId, answer, keyboardMarkup);
 
-        chatState.put(chatId, ChatStates.RECEIVED_BOT_RESPONSE);
+        chatStates.put(chatId, ChatStates.RECEIVED_BOT_RESPONSE);
 
         return message;
     }
@@ -124,11 +124,11 @@ public class ChatService {
     }
 
     private boolean isUserResponseAfterBotResponse(Long chatId) {
-        return chatState.containsKey(chatId) && chatState.get(chatId).equals(ChatStates.RECEIVED_BOT_RESPONSE);
+        return chatStates.containsKey(chatId) && chatStates.get(chatId).equals(ChatStates.RECEIVED_BOT_RESPONSE);
     }
 
     private boolean isUserQuestion(Long chatId) {
-        return chatState.containsKey(chatId) && chatState.get(chatId).equals(ChatStates.WAITING_USER_QUESTION);
+        return chatStates.containsKey(chatId) && chatStates.get(chatId).equals(ChatStates.WAITING_USER_QUESTION);
     }
 
 }
