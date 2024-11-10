@@ -19,7 +19,7 @@ public class TelegramUserService {
         }
     }
 
-    public boolean isNewUser(TelegramUser user){
+    private boolean isNewUser(TelegramUser user){
         return user.getChatId() != null && telegramUserRepository.findByChatId(user.getChatId()).isEmpty();
     }
 }
